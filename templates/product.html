@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>Products</title>
+{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section style="background: linear-gradient( wheat, black, black, wheat, green, wheat); color: aliceblue; ">
+  <div>
+    <h1 style="position: relative; bottom: 50px; left: 30%;">Black Friday ends in</h1>
+    <div style="text-align: center; position: relative; bottom: 50px; right: 50px;">
+      <div id="clockdiv">
+        <div>
+          <span class="days"></span>
+          <div class="smalltext">Days</div>
+        </div>
+        <div>
+          <span class="hours"></span>
+          <div class="smalltext">Hours</div>
+        </div>
+        <div>
+          <span class="minutes"></span>
+          <div class="smalltext">Minutes</div>
+        </div>
+        <div>
+          <span class="seconds"></span>
+          <div class="smalltext">Seconds</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Main layout-->
+  <main class="mt-5 pt-4" style="position: relative; bottom: 120px;">
+    <div class="container dark-grey-text">
+
+      <!--Grid row-->
+      <div class="row wow fadeIn" style="color: white">
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <img style="border-radius: 50%;" src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/9.jpg"
+            class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <!--Content-->
+          <div class="p-4">
+
+            <div class="mb-3">
+              <a href="">
+                <span class="badge purple mr-1">{{ object.get_category_display }}</span>
+              </a>
+            </div>
+
+            <p class="lead">
+              <span class="mr-1">
+                <del>$200</del>
+              </span>
+              <span>${{ object.price }}</span>
+            </p>
+
+            <h2>Description</h2>
+
+            <p><b style="color: red;"> Break the Record for claiming the Super Prize!</b></p>
+            <p>You can buy some minutes for playing</p>
+            <p>here...</p>
+            <small class="text-muted">$1 per minute</small>
+
+            <form class="uniForm" method="POST"> {% csrf_token %}
+              {{form|crispy}}
+              <button class="btn btn-outline-secondary" type="submit">Get Time and Start the Game
+                <i class="fas fa-shopping-cart ml-1"></i></button>
+            </form>
+
+          </div>
+          <!--Content-->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      <hr>
+
+      <!--Grid row-->
+      <div class="row d-flex justify-content-center wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-6 text-center">
+
+          <h4 class="my-4 h4" style="color: black;">Additional information</h4>
+
+          <p style="color: black;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus suscipit
+            modi
+            sapiente
+            illo soluta odit
+            voluptates,
+            quibusdam officia. Neque quibusdam quas a quis porro? Molestias illo neque eum in laborum.</p>
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-lg-4 col-md-12 mb-4">
+
+          <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/11.jpg" class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-4 col-md-6 mb-4">
+
+          <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/12.jpg" class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-4 col-md-6 mb-4">
+
+          <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/13.jpg" class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+    </div>
+  </main>
+  <!--Main layout-->
+</section>
+
+
+<script>
+  function getTimeRemaining(endtime) {
+    const total = Date.parse(endtime) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(total / (1000 * 60 * 60 * 24));
+
+    return {
+      total,
+      days,
+      hours,
+      minutes,
+      seconds
+    };
+  }
+
+  function initializeClock(id, endtime) {
+    const clock = document.getElementById(id);
+    const daysSpan = clock.querySelector('.days');
+    const hoursSpan = clock.querySelector('.hours');
+    const minutesSpan = clock.querySelector('.minutes');
+    const secondsSpan = clock.querySelector('.seconds');
+
+    function updateClock() {
+      const t = getTimeRemaining(endtime);
+
+      daysSpan.innerHTML = t.days;
+      hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+      minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+      secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+      if (t.total <= 0) {
+        clearInterval(timeinterval);
+      }
+    }
+
+    updateClock();
+    const timeinterval = setInterval(updateClock, 1000);
+  }
+
+  // const deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+
+  const deadline = '2021-01-01';
+
+  initializeClock('clockdiv', deadline);
+
+</script>
+
+{% endblock content %}

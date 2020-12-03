@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+<div class="answer-page">
+
+   <div class="user-answers">   
+      <h1>Your Answers on 2-nd Level </h1>
+      <table border = 1>
+         {% for key, value in result.items() %}
+            <ul>
+                <li>{{key}} - {{value}}</li>
+            </ul>
+         {% endfor %}
+      </table>
+   </div>
+
+   <div class="correct-answers">
+   <h1> Correct Answers </h1>
+   1st	( c ) - Legs <br><br>
+   2nd	( d ) - Ice and Cold <br><br>
+   3rd	( c ) - Oliver <br><br>
+   4th	( b ) - Call of Duty <br><br>
+   5th	( a ) - Ag <br><br>
+   6th	( d ) - Bern <br><br>
+   7th	( a ) - Mercury <br> <br>
+   8th	( b ) - Time <br><br>
+   9th	( a ) - 343 <br> <br>
+   10th	( b ) - 154 <br><br>
+   
+   </div>
+</div>
+{% endblock %}

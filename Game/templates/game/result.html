@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+<div class="answer-page">
+
+   <div class="user-answers">   
+      <h1>Your Answers </h1>
+      <table border = 1>
+         {% for key, value in result.items() %}
+            <tr>
+               <th> {{ key }} </th>
+               <td> {{ value }} </td>
+            </tr>
+         {% endfor %}
+      </table>
+   </div>
+
+   <div class="correct-answers">
+   <h1> Correct Answers </h1>
+      1st	( b ) - First Floor <br>
+      2nd	( a ) - 9 <br>
+      3rd	( c ) - She is a girl <br>
+      4th	( b ) - 68 <br>
+      5th	( b ) - 3 <br>
+      6th	( d ) - Equal <br>
+      7th	( a ) - 3 <br>
+      8th	( a ) - I am being torn by lions  ---[( Now, if the elder gave him to be torn by lions, then this phrase would appear to be true and the 
+                     Hunter would have to be thrown from the cliff. But if he is thrown by the cliff, then the phrase will turn out to be false. 
+                     The elder acknowledged that the only correct decision would be to let him go! )]--- <br><br>
+      9th	( d ) - 4 cats <br>
+      10th	( d ) - He had not any hair <br>
+      11th	( c ) - 4 hours <br>
+      12th	( d ) - Name <br>
+      13th	( d ) - Future 
+   </div>
+</div>
+<div class="get-rise-level">
+   <h2>You Passed 1-level and can, now, go to <a class="rise-level" href="{{ url_for('level_two') }}">Play 2-Level</a>!</h2>
+</div>
+{% endblock %}

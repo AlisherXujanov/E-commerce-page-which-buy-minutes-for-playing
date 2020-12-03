@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Quiz</title>
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center; position: relative;">
+    <div style="color: red;" class="mr-5" id="clockdiv">
+        <span style="display: none;" class="days"></span>
+        <span style="display: none;" class="hours"></span>
+        <span class="minutes"></span>
+        <span class="seconds"></span>
+    </div>
+</div>
+<div style="position: relative; bottom: 100px;">
+    <aside style="background: linear-gradient(90deg, wheat, black, wheat); float: right;" class="col-md-4 blog-sidebar">
+
+        <h4 style="color: snow; text-align: center;">Your Info and Answers!</h4>
+        <div class="p-4 mb-3 bg-light rounded">
+            <div><b id="UserAnswers" style="color: red; text-align: center;"></b></div>
+            <hr>
+            <div style=" background: linear-gradient(90deg, wheat, snow, wheat); float: right; border-radius: 10px;"><b
+                    id="UserAnswer" style="color: black; font-size: medium;"> </b>
+            </div>
+
+            {% for object in queryset2 %}
+            <h4 style=" text-align: center;">{{ object.name }}</h4>
+            <h6 style="text-align: center;">You have {{object.difficulty}} minute(s)!</h6>
+            <hr>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3'%}
+        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+        {% endif%}
+
+    </aside>
+
+    <h1 class="ml-4">Quiz</h1>
+    <hr>
+    <b id="UserAnswer" style="color: rgb(156, 107, 0);"> </b>
+    <div class="container">
+        {% for result in queryset1 %}
+        {% if result.id <= 10 %}
+        <table id="table">
+            <tr>
+                <td>{{ result.id }}) {{ result.question }}</td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="answer1" class="rb" name="{{ result.id }}"
+                        value="{{ result.answer1 }}">{{ result.answer1 }}</td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="answer2" class="rb" name="{{ result.id }}"
+                        value="{{ result.answer2 }}">{{ result.answer2 }}</td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="answer3" class="rb" name="{{ result.id }}"
+                        value="{{ result.answer3 }}">{{ result.answer3 }}</td>
+            </tr>
+            <tr>
+                <td><input type="radio" id="answer4" class="rb" name="{{ result.id }}"
+                        value="{{ result.answer4 }}">{{ result.answer4 }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="rb" style="display: none; color: rgb(0, 170, 0);" id="c-answer">The Correct Answer
+                        is: <button style="border-radius: 50%;" value="{{result.c_answer}}"
+                            class="btn btn-outline-success">{{result.c_answer}}</button></label>
+                </td>
+            </tr>
+            <hr>
+        </table>
+
+
+        {% endif %}
+        {% endfor %}
+        <hr>
+        <input type="submit" value="Submit" id="btn1" onclick="getanswers()">
+
+        <hr>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        $("#btn1").click(function () {
+            $(document).ready(function () {
+                $(".rb").show();
+                $(".rb").attr("disabled", true);
+            });
+        });
+        function getanswers() {
+
+            Swal.fire(
+                'Good job!',
+                'The Correct Answers Are Waiting for You',
+                'success'
+            )
+            var c_ans = document.getElementsByTagName("button")
+            var total = 0
+            var e = document.getElementsByTagName("input")
+            for (i = 0; i <= e.length; i++) {
+                if (e[i].type == "radio") {
+                    if (e[i].checked) {
+                        if (c_ans[i].value === e[i].value) {
+                            total += 1
+                        };
+                        document.getElementById("UserAnswer").innerHTML += e[i].name + ". Your answer is: " + e[i].value + "<br>";
+                        document.getElementById("UserAnswers").innerHTML = total + ' / 10 ';
+                    }
+                }
+            }
+        }
+    </script>
+</div>
+
+
+
+
+<script>
+    function getTimeRemaining(endtime) {
+        const total = Date.parse(endtime) - Date.parse(new Date());
+        const seconds = Math.floor((total / 1000) % 60);
+        const minutes = Math.floor((total / 1000 / 60) % 60);
+        const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+        const days = Math.floor(total / (1000 * 60 * 60 * 24));
+
+        return {
+            total,
+            days,
+            hours,
+            minutes,
+            seconds
+        };
+    }
+    function initializeClock(id, endtime) {
+        const clock = document.getElementById(id);
+        const daysSpan = clock.querySelector('.days');
+        const hoursSpan = clock.querySelector('.hours');
+        const minutesSpan = clock.querySelector('.minutes');
+        const secondsSpan = clock.querySelector('.seconds');
+
+        function updateClock() {
+            const t = getTimeRemaining(endtime);
+
+            daysSpan.innerHTML = t.days;
+            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+            if (t.total <= 0) {
+                clearInterval(timeinterval);
+            }
+        }
+
+        updateClock();
+        const timeinterval = setInterval(updateClock, 1000);
+    }
+
+
+
+    const timeInMinutes = 1;
+    const currentTime = Date.parse(new Date());
+    const deadline = new Date(currentTime + timeInMinutes * 60 * 1000);
+
+    initializeClock('clockdiv', deadline);
+
+    let redirect_Page = () => {
+        let tID = setTimeout(function () {
+            location.href = "http://127.0.0.1:8000/product/";
+            clearTimeout(tID);		// clear time out.
+        }, timeInMinutes * 60 * 1000);
+    }
+    redirect_Page(this)
+
+</script>
+
+{% endblock content %}

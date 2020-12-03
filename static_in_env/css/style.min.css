@@ -1,0 +1,47 @@
+.view,body,html{height:100%}.carousel{height:50%}.carousel .carousel-inner,.carousel .carousel-inner .active,.carousel .carousel-inner .carousel-item{height:100%}@media (max-width:776px){.carousel{height:100%}}.page-footer{background-color:#929FBA}
+
+
+body{
+background: wheat;
+font-family: sans-serif;
+font-weight: 100;
+}
+
+h1{
+color: black;
+font-weight: 100;
+font-size: 40px;
+font-family: cursive;
+margin: 60px 0 0 20px;
+}
+
+#clockdiv{
+font-family: sans-serif;
+color: black;
+display: inline-block;
+font-weight: 100;
+text-align: center;
+font-size: 30px;
+}
+
+#clockdiv > div{
+padding: 10px;
+border-radius: 50%;
+background: rgb(0, 0, 41);
+display: inline-block;
+}
+
+#clockdiv div > span{
+padding: 15px;
+border-radius: 50%;
+background: #00ff2a;
+color: black;
+display: inline-block;
+}
+
+.smalltext{
+padding-top: 5px;
+font-size: 12px;
+color: red;
+font-family: cursive;
+}
