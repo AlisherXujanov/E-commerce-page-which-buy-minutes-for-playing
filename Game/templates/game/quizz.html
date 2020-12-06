@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Quiz 2</title>
+{% endblock %}
+{% block content %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script type='text/javascript'>
+    var questions = {{ items_json| safe }};
+</script>
+
+<div id="app">
+    <ul>
+        <li v-for="quest in questions">
+            <p>[[ quest.question ]], [[ person.age ]] years old!</p> <button v-on:click="greet(person.name)"></button>
+
+            <a v-bind:href="person.url">[[ person.name ]], [[ person.age ]] years old!</a> <button
+                v-on:click="greet(person.name)"></button>
+
+        </li>
+    </ul>
+</div>
+
+<script>
+    var app = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#app',
+        data: {
+            questions: questions,
+        },
+        methods: {
+
+        }
+    });
+</script>
+{% endblock content %}
+
+
+<!-- <div class="container">
+    {% for result in queryset1 %}
+    {% if result.id <= 10 %}
+    <table id="table">
+        <tr>
+            <td>{{ result.id }}) {{ result.question }}</td>
+        </tr>
+        <tr>
+            <td><input type="radio" id="answer1" class="rb" name="{{ result.id }}"
+                    value="{{ result.answer1 }}">{{ result.answer1 }}</td>
+        </tr>
+        <tr>
+            <td><input type="radio" id="answer2" class="rb" name="{{ result.id }}"
+                    value="{{ result.answer2 }}">{{ result.answer2 }}</td>
+        </tr>
+        <tr>
+            <td><input type="radio" id="answer3" class="rb" name="{{ result.id }}"
+                    value="{{ result.answer3 }}">{{ result.answer3 }}</td>
+        </tr>
+        <tr>
+            <td><input type="radio" id="answer4" class="rb" name="{{ result.id }}"
+                    value="{{ result.answer4 }}">{{ result.answer4 }}</td>
+        </tr>
+        <tr>
+            <td>
+                <label class="rb" style="display: none; color: rgb(0, 170, 0);" id="c-answer">The Correct Answer
+                    is: <button style="border-radius: 50%;" value="{{result.c_answer}}"
+                        class="btn btn-outline-success">{{result.c_answer}}</button></label>
+            </td>
+        </tr>
+        <hr>
+    </table>
+
+
+    {% endif %}
+    {% endfor %}
+    <hr>
+    <input type="submit" value="Submit" id="btn1" onclick="getanswers()">
+
+    <hr>
+    </div> -->
