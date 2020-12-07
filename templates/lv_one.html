@@ -1,61 +1,72 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
 <title>Quiz</title>
 {% endblock %}
 
 {% block content %}
-<div style="text-align: center; position: relative;">
+<!-- <div style="text-align: center; position: relative;">
     <div style="color: red;" class="mr-5" id="clockdiv">
         <span style="display: none;" class="days"></span>
         <span style="display: none;" class="hours"></span>
         <span class="minutes"></span>
         <span class="seconds"></span>
     </div>
-</div>
-<div style="position: relative; bottom: 100px;">
+</div> -->
+<div style="position: relative; bottom: 50px;">
     <aside style="background: linear-gradient(90deg, wheat, black, wheat); float: right;" class="col-md-4 blog-sidebar">
 
-        <h4 style="color: snow; text-align: center;">Your Info and Answers!</h4>
-        <div class="p-4 mb-3 bg-light rounded">
-            <div><b id="UserAnswers" style="color: red; text-align: center;"></b></div>
-            <hr>
-            <div style=" background: linear-gradient(90deg, wheat, snow, wheat); float: right; border-radius: 10px;"><b
+        <section id="app" class="hero is-info is-fullheight is-bold">
+            <h2 style="text-align: center; color: cyan;">Welcome [[ name ]]</h2>
+            <div class="p-4 mb-3 bg-light rounded">
+                <!-- For showing the answers choosen by User -->
+                <!-- <div style=" background: linear-gradient(90deg, wheat, snow, wheat); float: right; border-radius: 10px;"><b
                     id="UserAnswer" style="color: black; font-size: medium;"> </b>
+            </div> -->
+
+                <!-- Vue-Js' div -->
+
+                <div class="hero-body">
+                    <p
+                        style="font-weight: bold; text-align: center; border: solid; border-radius: 50px; background-color: cyan;">
+                        Your
+                        [[difficulty ]] minute(s) is started</p>
+
+                    <div class="container has-text-centered">
+
+
+                        <div style="text-align: center; font-size: 40px;" id="timer">
+                            <span id="minutes">[[ minutes ]]</span>
+                            <span id="middle">:</span>
+                            <span id="seconds">[[ seconds ]]</span>
+                        </div>
+
+                        <div id="buttons">
+                            <!--     Start TImer -->
+                            <button id="start" class="button is-dark is-large" v-if="!timer" @click="startTimer">
+                                <i class="far fa-play-circle"></i>
+                            </button>
+                            <!--     Pause Timer -->
+                            <button id="stop" class="button is-dark is-large" v-if="timer" @click="stopTimer">
+                                <i class="far fa-pause-circle"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                {% for object in queryset2 %}
+                {{ object.name|json_script:"name" }}
+                {{ object.difficulty|json_script:"difficulty" }}
+                {% endfor %}
             </div>
-
-            {% for object in queryset2 %}
-            <h4 style=" text-align: center;">{{ object.name }}</h4>
-            <h6 style="text-align: center;">You have {{object.difficulty}} minute(s)!</h6>
-            <hr>
-            {% endfor %}
-        </div>
-
-        {% if is_paginated %}
-        {% if page_obj.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-        {% endif %}
-
-        {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-        <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3'%}
-        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-        {% endif %}
-        {% endfor %}
-
-        {% if page_obj.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-        {% endif %}
-        {% endif%}
-
+        </section>
     </aside>
 
     <h1 class="ml-4">Quiz</h1>
     <hr>
-    <b id="UserAnswer" style="color: rgb(156, 107, 0);"> </b>
     <div class="container">
         {% for result in queryset1 %}
         {% if result.id <= 10 %}
@@ -97,6 +108,65 @@
 
         <hr>
     </div>
+
+    <script>
+        var name = JSON.parse(document.getElementById('name').textContent)
+        var difficulty = JSON.parse(document.getElementById('difficulty').textContent)
+
+        var app = new Vue({
+            delimiters: ["[[", "]]"],
+            el: '#app',
+            data: {
+                name: name,
+                difficulty: difficulty,
+                timer: null,
+                totalTime: (difficulty * 60 + 3),
+                resetButton: false,
+            },
+            methods: {
+                startTimer: function () {
+                    this.timer = setInterval(() => this.countdown(), 1000);
+                    this.resetButton = true;
+                },
+                stopTimer: function () {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                    this.resetButton = true;
+                },
+                padTime: function (time) {
+                    return (time < 10 ? '0' : '') + time;
+                },
+                countdown: function () {
+                    if (this.totalTime >= 1) {
+                        if (this.totalTime == 3) {
+                            Swal.fire(
+                                'Sorry You Are Out Of Time',
+                                'danger'
+                            )
+                        }
+                        this.totalTime--;
+                    } else {
+                        this.totalTime = 0;
+                        location.href = "http://127.0.0.1:8000/product/";
+                        this.resetTimer()
+                    }
+                }
+            },
+            computed: {
+                minutes: function () {
+                    const minutes = Math.floor(this.totalTime / 60);
+                    return this.padTime(minutes);
+                },
+                seconds: function () {
+                    const seconds = this.totalTime - (this.minutes * 60);
+                    return this.padTime(seconds);
+
+                },
+            }
+        })
+    </script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
@@ -114,28 +184,20 @@
                 'The Correct Answers Are Waiting for You',
                 'success'
             )
-            var c_ans = document.getElementsByTagName("button")
             var total = 0
             var e = document.getElementsByTagName("input")
             for (i = 0; i <= e.length; i++) {
                 if (e[i].type == "radio") {
                     if (e[i].checked) {
-                        if (c_ans[i].value === e[i].value) {
-                            total += 1
-                        };
                         document.getElementById("UserAnswer").innerHTML += e[i].name + ". Your answer is: " + e[i].value + "<br>";
-                        document.getElementById("UserAnswers").innerHTML = total + ' / 10 ';
                     }
                 }
             }
         }
     </script>
 </div>
-
-
-
-
-<script>
+<!-- Old Timer -->
+<!-- <script>
     function getTimeRemaining(endtime) {
         const total = Date.parse(endtime) - Date.parse(new Date());
         const seconds = Math.floor((total / 1000) % 60);
@@ -175,9 +237,7 @@
         const timeinterval = setInterval(updateClock, 1000);
     }
 
-
-
-    const timeInMinutes = 1;
+    const timeInMinutes = 5;                                               // <<<<---<<<<---   Set timer for deadline here
     const currentTime = Date.parse(new Date());
     const deadline = new Date(currentTime + timeInMinutes * 60 * 1000);
 
@@ -191,6 +251,6 @@
     }
     redirect_Page(this)
 
-</script>
+</script> -->
 
 {% endblock content %}

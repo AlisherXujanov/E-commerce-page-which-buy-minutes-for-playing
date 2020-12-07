@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Choice
 from django.views.generic import ListView, TemplateView
 from core.models import Item, Timer
-from random import shuffle
+from random import choice, shuffle
 from django.http import JsonResponse
+from .forms import QuizForm
+from django.forms.models import model_to_dict
 
 
 class GameView(TemplateView):
@@ -22,14 +24,28 @@ class GameView(TemplateView):
     # ex.delete()
 
 
-class TaskView(ListView):
+class quizInVue(ListView):
     def get(self, request):
         tasks = list(Item.objects.values())
 
         if request.is_ajax():
             return JsonResponse({'tasks': tasks}, status=200)
 
-        return render(request, 'game/quizz2.html')
+        return render(request, 'game/quizInVue.html')
 
-    # def post(self, request):
-        # bound_form = anyForm(request.POST)
+#     def post(self, request):
+#         bound_form = QuizForm(request.POST)
+
+#         if bound_form.is_valid():
+#             new_task = bound_form.save()
+#             return JsonResponse({'task': model_to_dict(new_task)}, status=200)
+
+#         return redirect('vue_django')
+
+
+# class TaskComplete(ListView):
+#     def post(self, request, id):
+#         task = Choice.objects.get(id=id)
+#         task.completed = True
+#         task.save()
+#         return JsonResponse({'task': model_to_dict(task)}, status=200)
