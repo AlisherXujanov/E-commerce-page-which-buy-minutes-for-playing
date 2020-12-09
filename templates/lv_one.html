@@ -5,35 +5,20 @@
 {% endblock %}
 
 {% block content %}
-<!-- <div style="text-align: center; position: relative;">
-    <div style="color: red;" class="mr-5" id="clockdiv">
-        <span style="display: none;" class="days"></span>
-        <span style="display: none;" class="hours"></span>
-        <span class="minutes"></span>
-        <span class="seconds"></span>
-    </div>
-</div> -->
 <div style="position: relative; bottom: 50px;">
     <aside style="background: linear-gradient(90deg, wheat, black, wheat); float: right;" class="col-md-4 blog-sidebar">
-
         <section id="app" class="hero is-info is-fullheight is-bold">
             <h2 style="text-align: center; color: cyan;">Welcome [[ name ]]</h2>
+            <b style="position: relative; left: 50px; color: wheat;" class="m-2">Bonus: <span
+                    style=" font-weight: bold; color: green;">+5
+                    seconds</span> for your purchase!</b>
             <div class="p-4 mb-3 bg-light rounded">
-                <!-- For showing the answers choosen by User -->
-                <!-- <div style=" background: linear-gradient(90deg, wheat, snow, wheat); float: right; border-radius: 10px;"><b
-                    id="UserAnswer" style="color: black; font-size: medium;"> </b>
-            </div> -->
-
-                <!-- Vue-Js' div -->
-
                 <div class="hero-body">
                     <p
-                        style="font-weight: bold; text-align: center; border: solid; border-radius: 50px; background-color: cyan;">
-                        Your
-                        [[difficulty ]] minute(s) is started</p>
+                        style="font-weight: bold; text-align: center; border: red solid; border-radius: 50px; background-color: black; color: cyan;">
+                        Your [[difficulty ]] minute(s) is started</p>
 
                     <div class="container has-text-centered">
-
 
                         <div style="text-align: center; font-size: 40px;" id="timer">
                             <span id="minutes">[[ minutes ]]</span>
@@ -54,9 +39,6 @@
 
                     </div>
                 </div>
-
-
-
                 {% for object in queryset2 %}
                 {{ object.name|json_script:"name" }}
                 {{ object.difficulty|json_script:"difficulty" }}
@@ -120,7 +102,7 @@
                 name: name,
                 difficulty: difficulty,
                 timer: null,
-                totalTime: (difficulty * 60 + 3),
+                totalTime: (difficulty * 60 + 5),
                 resetButton: false,
             },
             methods: {
@@ -166,7 +148,6 @@
         })
     </script>
 
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
@@ -196,61 +177,5 @@
         }
     </script>
 </div>
-<!-- Old Timer -->
-<!-- <script>
-    function getTimeRemaining(endtime) {
-        const total = Date.parse(endtime) - Date.parse(new Date());
-        const seconds = Math.floor((total / 1000) % 60);
-        const minutes = Math.floor((total / 1000 / 60) % 60);
-        const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-        const days = Math.floor(total / (1000 * 60 * 60 * 24));
-
-        return {
-            total,
-            days,
-            hours,
-            minutes,
-            seconds
-        };
-    }
-    function initializeClock(id, endtime) {
-        const clock = document.getElementById(id);
-        const daysSpan = clock.querySelector('.days');
-        const hoursSpan = clock.querySelector('.hours');
-        const minutesSpan = clock.querySelector('.minutes');
-        const secondsSpan = clock.querySelector('.seconds');
-
-        function updateClock() {
-            const t = getTimeRemaining(endtime);
-
-            daysSpan.innerHTML = t.days;
-            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
-            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
-
-            if (t.total <= 0) {
-                clearInterval(timeinterval);
-            }
-        }
-
-        updateClock();
-        const timeinterval = setInterval(updateClock, 1000);
-    }
-
-    const timeInMinutes = 5;                                               // <<<<---<<<<---   Set timer for deadline here
-    const currentTime = Date.parse(new Date());
-    const deadline = new Date(currentTime + timeInMinutes * 60 * 1000);
-
-    initializeClock('clockdiv', deadline);
-
-    let redirect_Page = () => {
-        let tID = setTimeout(function () {
-            location.href = "http://127.0.0.1:8000/product/";
-            clearTimeout(tID);		// clear time out.
-        }, timeInMinutes * 60 * 1000);
-    }
-    redirect_Page(this)
-
-</script> -->
 
 {% endblock content %}

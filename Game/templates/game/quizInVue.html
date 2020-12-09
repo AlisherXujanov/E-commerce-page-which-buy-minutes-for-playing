@@ -1,30 +1,80 @@
-{% extends 'baza.html' %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<html>
 
-{% verbatim %}
-<div class="" id="app">
+<head>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
 
+<body>
+    <div id="app" class="jumbotron text-center blue-grey lighten-5">
+        {% for object in queryset2 %}
+        {{ object.name|json_script:'name' }}
+        {% endfor %}
+        <!-- Jumbotron -->
+        <div class="card card-image"
+            style="background-image: url(https://mdbootstrap.com/img/Photos/Others/forest5.jpg);">
+            <div class="text-white text-center rgba-stylish-strong py-5 px-4">
+                <div class="py-5">
 
-    <form @submit.prevent="createTask">
-        <div class="col-9">
-            <label>Fancy Quiz</label>
-            <input type="text" class="form-control" v-model='task'>
-            <button style="float: right;" class="btn btn-success" type="submit">Submit</button>
-        </div>
-    </form>
-    <div class="mt-5">
-        <div class="card">
-            <div class="card-body" v-for="task in tasks">
-                {{ task.title }}
-                {{ task.question }}
-                <button class="close float-right">
-                </button>
+                    <h5 class="h5 orange-text"><i class="fas fa-camera-retro"></i>Hello [[name]]</h5>
+                    <h2 class="card-title h2 my-4 py-2">Fancy Quiz</h2>
+                    <p>4/10 [[task]]</p>
+                    <ul class="list-group">
+                        <li class="list-group-item">Cras justo odio</li>
+                        <li class="list-group-item">Dapibus ac facilisis in</li>
+                        <li class="list-group-item">Morbi leo risus</li>
+                        <li class="list-group-item">Porta ac consectetur ac</li>
+                        <li class="list-group-item">Vestibulum at eros</li>
+                    </ul>
+                    <a class="btn btn-outline-success"><i class="fas fa-clone left"></i> Submit</a>
+                    <a class="btn peach-gradient"><i class="fas fa-clone left"></i> Next</a>
+
+                </div>
             </div>
         </div>
+        <!-- Jumbotron -->
+
     </div>
 
 
-</div>
-{% endverbatim %}
 
-{% endblock %}
+    <script>
+        var name = JSON.parse(document.getElementById('name').textContent);
+
+        var app = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#app',
+            data: {
+                name: name,
+                task: 'True',
+                return: {
+                    questions: []
+                }
+            },
+            mounted: function () {
+                fetch('https://opentdb.com/api.php?amount=10&encode=base64', {
+                    method: 'get'
+                })
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then((jsonData) => {
+                        this.questions = jsonData.results
+                    })
+            }
+        })
+    </script>
+
+</body>
+
+</html>
